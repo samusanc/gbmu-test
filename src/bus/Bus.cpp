@@ -1,4 +1,9 @@
 #include "Bus.hpp"
+#include "../cpu/CPU.hpp"
+#include "../ppu/PPU.hpp"
+#include "../cartridge/Cartridge.hpp"
+#include "../timer/Timer.hpp"
+#include "../joypad/Joypad.hpp"
 
 Bus::Bus() : IF(0), IE(0),
              cpu(nullptr), ppu(nullptr),
