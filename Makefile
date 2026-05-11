@@ -1,43 +1,38 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: samusanc <samusanc@student.42madrid>       +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/06/24 19:28:25 by samusanc          #+#    #+#              #
-#    Updated: 2024/07/18 19:22:34 by samusanc         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+NAME        = gbmu
 
-NAME		=	btc
-CXXFLAGS	=	-g -Wall -Wextra -Werror -I ./
-CXXFLAGS	+=	-std=c++98
-CXX		=	c++ $(CXXFLAGS)
-MAIN		=	./main.cpp
-INC		=	./BitcoinExchange.hpp
-SRCS		=	$(MAIN) \
-			./BitcoinExchange.cpp
+CXX         = c++
+CXXFLAGS    = -Wall -Wextra -Werror -std=c++17 -g
+CXXFLAGS    += $(shell sdl2-config --cflags)
+LDFLAGS     = $(shell sdl2-config --libs)
 
-O_DIR		=	./objects/
-OBJS		=	$(addprefix $(O_DIR)/, $(SRCS:.cpp=.o))
+SRCS        = main.cpp \
+              src/GameBoy.cpp \
+              src/bus/Bus.cpp \
+              src/cpu/CPU.cpp \
+              src/ppu/PPU.cpp \
+              src/cartridge/Cartridge.cpp \
+              src/timer/Timer.cpp \
+              src/joypad/Joypad.cpp \
+              src/display/Display.cpp
 
-$(O_DIR)/%.o: %.cpp
-	mkdir -p $(@D)
-	$(CXX) -c $< -o $(O_DIR)/$(<:.cpp=.o)
+OBJ_DIR     = build
+OBJS        = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
-all: $(NAME) $(SRCS)
+$(OBJ_DIR)/%.o: %.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(NAME): $(OBJS) $(INC)
-	$(CXX) $(OBJS) -o $(NAME)
+all: $(NAME)
 
-re: fclean all
+$(NAME): $(OBJS)
+	$(CXX) $(OBJS) $(LDFLAGS) -o $(NAME)
+
+clean:
+	@rm -rf $(OBJ_DIR)
 
 fclean: clean
 	@rm -f $(NAME)
-	@rm -rf objects
 
-clean:
-	@rm -f $(OBJS)
+re: fclean all
 
-.PHONY: all
+.PHONY: all clean fclean re

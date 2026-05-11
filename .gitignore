@@ -1,0 +1,8 @@
+build/
+gbmu
+*.o
+*.d
+roms/
+*.gb
+*.gbc
+*.sav
